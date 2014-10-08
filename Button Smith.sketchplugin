@@ -1,9 +1,8 @@
- // Button Smith (shift cmd b)
+// Button Smith (shift cmd b)
 
 // TO DO LIST
 
 // - Create user input for button padding
-// - Create user input for button border-radius
 // - Add styling from Sketch if possible
 
 
@@ -24,11 +23,31 @@ function buttonCheck() {
 
 function createButton() {
 
-  var msg = 'hi';
-  var title = 'nice';
-    var app = NSApplication.sharedApplication();
-    app.displayDialog(msg);
 
+  //Input window for settings for button
+  var inputWindow = createInput();
+  var options = handleAlertResponse(inputWindow,inputWindow.runModal());
+
+
+
+  function handleAlertResponse(inputWindow, responseCode){
+
+    if (responseCode == "1000") {
+        function valAtIndex (view, index) {
+            return parseInt(view.viewAtIndex(index).stringValue());
+        }
+
+        return {
+            radius: valAtIndex(inputWindow,3),
+            padding: valAtIndex(inputWindow,1)
+        }
+    }
+
+    return null;
+
+  }
+
+log(options.radius);
 
 
     // Establish text position
@@ -39,7 +58,7 @@ function createButton() {
         textWidth = layerFrame.width();
 
 
-    // Start the magic (note: make this note better)
+    // Start the magic (Note: make this note better)
     var newGroup = parentGroup.addLayerOfType('group');
     newGroup.name = buttonContainerName;
     newGroup.frame().setX(textX);
@@ -51,16 +70,15 @@ function createButton() {
     layer.frame().subtractY(textY);
 
     var newBG = newGroup.addLayerOfType('rectangle');
-    log(textHeight + 'textHeight')
     newBG.frame().addHeight(textHeight-100);
 
 
-    //Radius Magic (NOTE: Please clean up to match JS Talk)
-    var radius = 5
-        firstObject = [[newBG layers] firstObject]
+    //Radius Magic (Note: make this note better)
+    var radius = options.radius;
+        firstObject = newBG.layers().firstObject();
 
-    [firstObject setFixedRadius:(radius)]
-    [firstObject resetPointsBasedOnUserInteraction]
+    firstObject.setFixedRadius(radius);
+    firstObject.resetPointsBasedOnUserInteraction();
 
     var styleBG = newBG.style().fills();
     styleBG.addNewStylePart();
@@ -73,4 +91,28 @@ function createButton() {
     newGroup.addLayer(dupLayer);
     parentGroup.removeLayer(layer);
 
+}
+
+function createInput() {
+  var inputWindow = COSAlertWindow.new();
+
+  function createTextFieldWithLavel(label,defaultValue) {
+    inputWindow.addTextLabelWithValue(label);
+    inputWindow.addTextFieldWithValue(defaultValue);
+  }
+
+    inputWindow.setMessageText("Buttonsmith");
+    inputWindow.setInformativeText("Create Buttons with ease!");
+
+    // Repeats
+    createTextFieldWithLavel("Padding","10");
+    createTextFieldWithLavel("Border-Radius:","0");
+
+
+
+  // Actions buttons.
+  inputWindow.addButtonWithTitle('Build Button');
+  inputWindow.addButtonWithTitle('Cancel');
+
+  return inputWindow;
 }
