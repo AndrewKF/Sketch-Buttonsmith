@@ -1,0 +1,76 @@
+ // Button Smith (shift cmd b)
+
+// TO DO LIST
+
+// - Create user input for button padding
+// - Create user input for button border-radius
+// - Add styling from Sketch if possible
+
+
+var layer = selection[0];
+var parentName = layer.parentGroup().name();
+var parentGroup = layer.parentGroup();
+var buttonContainerName = 'styled button';
+
+
+selection.count() === 0 ? log('No Selection') : buttonCheck();
+
+
+function buttonCheck() {
+
+  layer.parentGroup().name() == buttonContainerName ? log('true') : createButton();
+
+}
+
+function createButton() {
+
+  var msg = 'hi';
+  var title = 'nice';
+    var app = NSApplication.sharedApplication();
+    app.displayDialog(msg);
+
+
+
+    // Establish text position
+    var layerFrame = layer.frame(),
+        textX = layerFrame.x(),
+        textY = layerFrame.y(),
+        textHeight = layerFrame.height(),
+        textWidth = layerFrame.width();
+
+
+    // Start the magic (note: make this note better)
+    var newGroup = parentGroup.addLayerOfType('group');
+    newGroup.name = buttonContainerName;
+    newGroup.frame().setX(textX);
+    newGroup.frame().setY(textY);
+    newGroup.frame().addHeight(textHeight-100);
+
+    // Janky fix for main artboard selection issue
+    layer.frame().subtractX(textX);
+    layer.frame().subtractY(textY);
+
+    var newBG = newGroup.addLayerOfType('rectangle');
+    log(textHeight + 'textHeight')
+    newBG.frame().addHeight(textHeight-100);
+
+
+    //Radius Magic (NOTE: Please clean up to match JS Talk)
+    var radius = 5
+        firstObject = [[newBG layers] firstObject]
+
+    [firstObject setFixedRadius:(radius)]
+    [firstObject resetPointsBasedOnUserInteraction]
+
+    var styleBG = newBG.style().fills();
+    styleBG.addNewStylePart();
+
+
+    // There is a bug with this where the group will be in the
+    // top right of the artboard until it is selected.
+    var dupLayer = layer.duplicate();
+    parentGroup.removeLayer(dupLayer);
+    newGroup.addLayer(dupLayer);
+    parentGroup.removeLayer(layer);
+
+}
