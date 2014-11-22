@@ -132,7 +132,7 @@ function createInput() {
   inputWindow.setInformativeText("Create Buttons with ease!");
 
   // Input W/ Labels
-  createTextFieldWithLavel("Padding","10");
+  createTextFieldWithLavel("Padding (x-padding, y-padding):","5, 10");
   createTextFieldWithLavel("Border-Radius:","0");
 
   // Actions buttons
